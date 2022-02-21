@@ -8424,8 +8424,9 @@ function run() {
         const token = core.getInput('github-token');
         const github = new github_1.GithubApi(token);
         let amountTrending = Number(core.getInput('quantity'));
+        core.info(core.getInput('included-labels'));
         const includedLabels = core.getInput('included-labels', { required: false }).split(',');
-        core.info(`Included labels: ${includedLabels}`);
+        core.info(`Included labels : ${includedLabels}`);
         const trendingIssues = yield github.getTrendingIssues(includedLabels);
         if (trendingIssues.length < amountTrending) {
             amountTrending = trendingIssues.length;
