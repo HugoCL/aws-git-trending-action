@@ -6,7 +6,7 @@ async function run() {
 
   const token = core.getInput('github-token');
   const github: GithubApi = new GithubApi(token);
-  const amountTrending: number = Number(core.getInput('quantity'));
+  let amountTrending: number = Number(core.getInput('quantity'));
 
   const includedLabels: string[] | undefined = core
     .getInput('included-labels', { required: false })
@@ -14,14 +14,15 @@ async function run() {
     .split('|');
 
   const trendingIssues: IIssueData[] = await github.getTrendingIssues(includedLabels);
-
+  if (trendingIssues.length < amountTrending) {
+    amountTrending = trendingIssues.length;
+  }
   for (let i = 0; i < amountTrending; i++) {
     const issue: IIssueData = trendingIssues[i];
     const issueNumber: number = issue.issueNumber;
     github.addIssueLabel('trending', issueNumber);
     core.info(`Issue #${issueNumber} is labeled as trending`);
   }
-  // set labeled output with the trending issues as a json string
   core.setOutput('trending-issues', JSON.stringify(trendingIssues));
 }
 
