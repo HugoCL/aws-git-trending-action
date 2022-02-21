@@ -8428,12 +8428,14 @@ function run() {
             .getInput('included-labels', { required: false })
             .replace(/\[|\]/gi, '')
             .split('|');
+        console.log(`Included labels: ${includedLabels}`);
         const trendingIssues = yield github.getTrendingIssues(includedLabels);
         if (trendingIssues.length < amountTrending) {
             amountTrending = trendingIssues.length;
         }
         for (let i = 0; i < amountTrending; i++) {
             const issue = trendingIssues[i];
+            console.log(`${issue.issueNumber}: ${issue.title}`);
             const issueNumber = issue.issueNumber;
             github.addIssueLabel('trending', issueNumber);
             core.info(`Issue #${issueNumber} is labeled as trending`);

@@ -12,7 +12,7 @@ async function run() {
     .getInput('included-labels', { required: false })
     .replace(/\[|\]/gi, '')
     .split('|');
-
+  console.log(`Included labels: ${includedLabels}`);
   const trendingIssues: IIssueData[] = await github.getTrendingIssues(includedLabels);
   if (trendingIssues.length < amountTrending) {
     amountTrending = trendingIssues.length;
