@@ -1,7 +1,6 @@
 export interface IIssueData {
   issueNumber: number;
   title?: string;
-  labels?: string[];	
   comments: number;
 }
 

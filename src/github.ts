@@ -37,20 +37,19 @@ export class GithubApi {
   public async getTrendingIssues(includedLabels: string[]): Promise<IIssueData[]> {
     const issuesData = [];
     for (const label of includedLabels) {
-      const { data } = await this.octokit.rest.search.issuesAndPullRequests({
-        q: `is:issue is:open label:"${label}"`,
-        ...this.repo,
+      const { data } = await this.octokit.rest.issues.listForRepo({
+        owner: this.repo.owner,
+        repo: this.repo.repo,
         state: 'open',
         sort: 'comments',
         direction: 'desc',
         per_page: 10,
         labels: label,
       });
-      for (const item of data.items) {
+      for (const item of data) {
         const issueData: IIssueData = {
           issueNumber: item.number,
           title: item.title,
-          labels: item.labels.map(label => label.name as string),
           comments: item.comments,
         };
         issuesData.push(issueData);

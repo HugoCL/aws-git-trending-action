@@ -8362,12 +8362,19 @@ class GithubApi {
         return __awaiter(this, void 0, void 0, function* () {
             const issuesData = [];
             for (const label of includedLabels) {
-                const { data } = yield this.octokit.rest.search.issuesAndPullRequests(Object.assign(Object.assign({ q: `is:issue is:open label:"${label}"` }, this.repo), { state: 'open', sort: 'comments', direction: 'desc', per_page: 10, labels: label }));
-                for (const item of data.items) {
+                const { data } = yield this.octokit.rest.issues.listForRepo({
+                    owner: this.repo.owner,
+                    repo: this.repo.repo,
+                    state: 'open',
+                    sort: 'comments',
+                    direction: 'desc',
+                    per_page: 10,
+                    labels: label,
+                });
+                for (const item of data) {
                     const issueData = {
                         issueNumber: item.number,
                         title: item.title,
-                        labels: item.labels.map(label => label.name),
                         comments: item.comments,
                     };
                     issuesData.push(issueData);
