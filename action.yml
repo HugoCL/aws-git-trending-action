@@ -1,0 +1,18 @@
+name: 'git-trending-issues'
+description: 'Git Trending Issues'
+inputs:
+  github-token:
+    required: true
+    description: 'GitHub Access Token'
+  quantity:
+    required: true
+    description: 'Number of issues to label as trending'
+  included_labels:
+    required: true
+    description: 'Labels to include in the trending issues filtering'
+outputs:
+  trending-issues:
+    description: 'Issues labeled correctly as trending'
+runs:
+  using: "node12"
+  main: "dist/index.js"
