@@ -7,7 +7,7 @@ inputs:
   quantity:
     required: true
     description: 'Number of issues to label as trending'
-  included_labels:
+  included-labels:
     required: true
     description: 'Labels to include in the trending issues filtering'
 outputs:

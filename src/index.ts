@@ -8,7 +8,10 @@ async function run() {
   const github: GithubApi = new GithubApi(token);
   let amountTrending: number = Number(core.getInput('quantity'));
   core.info(core.getInput('included-labels'));
-  const includedLabels: string[] | undefined = core.getInput('included-labels', { required: false }).split(',');
+  const includedLabels: string[] | undefined = core
+    .getInput('included-labels', { required: false })
+    .replace(/\[|\]/gi, '')
+    .split('|');
   core.info(`Included labels : ${includedLabels}`);
   const trendingIssues: IIssueData[] = await github.getTrendingIssues(includedLabels);
   if (trendingIssues.length < amountTrending) {
