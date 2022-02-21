@@ -13,7 +13,7 @@ export declare class GithubApi {
      * @param issueNumber The issue number that references the Github issue
      * @returns Nothing
      */
-    addIssueLabel(label: string, issueNumber: number): Promise<void>;
+    addIssueLabel(label: string[], issueNumber: number): Promise<void>;
     /**
      * This function is used to get the 10 most trending issues per label specified
      * @param includedLabels The labels that will be used to get the trending issues

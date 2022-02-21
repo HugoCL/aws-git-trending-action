@@ -8350,7 +8350,12 @@ class GithubApi {
         return __awaiter(this, void 0, void 0, function* () {
             if (!label)
                 return;
-            yield this.octokit.rest.issues.addLabels(Object.assign(Object.assign({}, this.repo), { issue_number: issueNumber, label }));
+            yield this.octokit.rest.issues.addLabels({
+                owner: this.repo.owner,
+                repo: this.repo.repo,
+                issue_number: issueNumber,
+                labels: label,
+            });
         });
     }
     /**
@@ -8442,7 +8447,7 @@ function run() {
             const issue = trendingIssues[i];
             core.info(`${issue.issueNumber}: ${issue.title}`);
             const issueNumber = issue.issueNumber;
-            github.addIssueLabel('trending', issueNumber);
+            github.addIssueLabel(['trending'], issueNumber);
             core.info(`Issue #${issueNumber} is labeled as trending`);
         }
         core.setOutput('trending-issues', JSON.stringify(trendingIssues));

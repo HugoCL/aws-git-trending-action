@@ -21,12 +21,13 @@ export class GithubApi {
    * @param issueNumber The issue number that references the Github issue
    * @returns Nothing
    */
-  public async addIssueLabel(label: string, issueNumber: number) {
+  public async addIssueLabel(label: string[], issueNumber: number) {
     if (!label) return;
     await this.octokit.rest.issues.addLabels({
-      ...this.repo,
+      owner: this.repo.owner,
+      repo: this.repo.repo,
       issue_number: issueNumber,
-      label,
+      labels: label,
     });
   }
   /**
