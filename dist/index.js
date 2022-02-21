@@ -8424,10 +8424,7 @@ function run() {
         const token = core.getInput('github-token');
         const github = new github_1.GithubApi(token);
         let amountTrending = Number(core.getInput('quantity'));
-        const includedLabels = core
-            .getInput('included-labels', { required: false })
-            .replace(/\[|\]/gi, '')
-            .split('|');
+        const includedLabels = core.getInput('included-labels').replace(/[\[\]\s]/g, '').split(',');
         const trendingIssues = yield github.getTrendingIssues(includedLabels);
         core.info(`${trendingIssues.length} issues found`);
         core.info(JSON.stringify(trendingIssues));

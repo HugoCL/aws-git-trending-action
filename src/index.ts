@@ -7,11 +7,7 @@ async function run() {
   const token = core.getInput('github-token');
   const github: GithubApi = new GithubApi(token);
   let amountTrending: number = Number(core.getInput('quantity'));
-
-  const includedLabels: string[] | undefined = core
-    .getInput('included-labels', { required: false })
-    .replace(/\[|\]/gi, '')
-    .split('|');
+  const includedLabels = core.getInput('included-labels').replace(/[\[\]\s]/g, '').split(',');
   const trendingIssues: IIssueData[] = await github.getTrendingIssues(includedLabels);
   core.info(`${trendingIssues.length} issues found`);
   core.info(JSON.stringify(trendingIssues));
