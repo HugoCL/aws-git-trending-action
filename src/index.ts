@@ -19,6 +19,7 @@ async function run() {
   }
   for (let i = 0; i < amountTrending; i++) {
     const issue: IIssueData = trendingIssues[i];
+    console.log(`${issue.issueNumber}: ${issue.title}`);
     const issueNumber: number = issue.issueNumber;
     github.addIssueLabel('trending', issueNumber);
     core.info(`Issue #${issueNumber} is labeled as trending`);
