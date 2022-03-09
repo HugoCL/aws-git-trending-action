@@ -1,5 +1,14 @@
 import * as github from '@actions/github';
-import { IIssueData } from './issue';
+export interface IIssueData {
+  issueNumber: number;
+  title?: string;
+  comments: number;
+}
+
+export interface IParameter {
+  area: string;
+  num_issues: number;
+}
 
 export interface IRepo {
   owner: string;
@@ -31,29 +40,44 @@ export class GithubApi {
     });
   }
   /**
-   * This function is used to get the 10 most trending issues per label specified
+   * This function is used to get the 15 most trending issues per label specified and checks
+   * wheter the issue has obtained at least 10 thumbs up votes.
    * @param includedLabels The labels that will be used to get the trending issues
    * @returns A list of issues (IIsueData) that are trending per label
    */
   public async getTrendingIssues(includedLabels: string[]): Promise<IIssueData[]> {
     const issuesData = [];
     for (const label of includedLabels) {
+      // Get the 15 most popular issues per label (product) 
       const { data } = await this.octokit.rest.issues.listForRepo({
         owner: this.repo.owner,
         repo: this.repo.repo,
         state: 'open',
         sort: 'comments',
         direction: 'desc',
-        per_page: 10,
+        per_page: 15,
         labels: label,
       });
+      // Geting the reactions for each issue that is candidate for trending
       for (const item of data) {
-        const issueData: IIssueData = {
-          issueNumber: item.number,
-          title: item.title,
-          comments: item.comments,
-        };
-        issuesData.push(issueData);
+        const { data } = await this.octokit.rest.reactions.listForIssue({
+          owner: this.repo.owner,
+          repo: this.repo.repo,
+          issue_number: item.number,
+          content: '+1',
+          per_page: 100,
+        });
+        if (data) {
+          // If the issue has at least 10 thumbs up, it qualifies for trending label
+          if (data.length > 10) {
+            const issueData: IIssueData = {
+              issueNumber: item.number,
+              title: item.title,
+              comments: item.comments,
+            };
+            issuesData.push(issueData);
+          }  
+        }
       }
     }
     issuesData.sort((a, b) => b.comments - a.comments);

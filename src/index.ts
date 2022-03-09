@@ -1,16 +1,19 @@
 import * as core from '@actions/core';
-import { GithubApi } from './github';
-import { IIssueData } from './issue';
+import { GithubApi, IIssueData} from './github';
 
 async function run() {
 
   const token = core.getInput('github-token');
   const github: GithubApi = new GithubApi(token);
+
   let amountTrending: number = Number(core.getInput('quantity'));
   const includedLabels = core.getInput('included-labels').replace(/[\[\]\s]/g, '').split(',');
+  // We get the 
   const trendingIssues: IIssueData[] = await github.getTrendingIssues(includedLabels);
+  
   core.info(`${trendingIssues.length} issues found`);
   core.info(JSON.stringify(trendingIssues));
+  
   if (trendingIssues.length < amountTrending) {
     amountTrending = trendingIssues.length;
   }
